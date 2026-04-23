@@ -2,16 +2,57 @@
 <html>
 <head>
     <title>Name Card</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to right, #74ebd5, #9face6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background: #6c63ff;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #4e47cc;
+        }
+    </style>
 </head>
-<body style="background-color: lightblue; text-align: center;">
+<body>
 
-<h1>My Name Card</h1>
+<div class="card">
+    <h2> My Name Card</h2>
 
-<form action="process.php" method="POST">
-    Name: <input type="text" name="name"><br><br>
-    Job: <input type="text" name="job"><br><br>
-    <button type="submit">Submit</button>
-</form>
+    <form action="process.php" method="POST">
+        <input type="text" name="name" placeholder="Enter your name"><br>
+        <input type="text" name="job" placeholder="Enter your job"><br>
+        <button type="submit">Submit</button>
+    </form>
+</div>
 
 </body>
 </html>
