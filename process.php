@@ -6,6 +6,7 @@ ini_set('display_errors', 1);
 $username = $_POST["username"];
 $fullname = $_POST["fullname"];
 $password = $_POST["password"];
+$hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
 // Connect DB
 $conn = new mysqli("localhost", "webuser", "123456", "userdb");
@@ -17,7 +18,7 @@ if ($conn->connect_error) {
 
 // Insert safely
 $stmt = $conn->prepare("INSERT INTO users (username, fullname, password) VALUES (?, ?, ?)");
-$stmt->bind_param("sss", $username, $fullname, $password);
+$stmt->bind_param("sss", $username, $fullname, $hashed_password);
 
 if ($stmt->execute()) {
     echo " Data saved successfully!";

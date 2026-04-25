@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Social App - Sign Up</title>
+</head>
 <body>
 
-<h2>Simple Form</h2>
+<h2>Sign Up</h2>
 
-<form method="POST">
-  Name: <input type="text" name="name"><br><br>
-  Job: <input type="text" name="job"><br><br>
-  <button type="submit">Submit</button>
+<form action="process.php" method="POST">
+    Username: <input type="text" name="username"><br><br>
+    
+    Full Name: <input type="text" name="fullname"><br><br>
+    
+    Password: <input type="password" name="password"><br><br>
+
+    <input type="submit" value="Register">
 </form>
-
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    echo "<h3>Result:</h3>";
-    echo "Name: " . $_POST["name"] . "<br>";
-    echo "Job: " . $_POST["job"];
-}
-?>
 
 </body>
 </html>
