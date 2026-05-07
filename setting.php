@@ -10,15 +10,15 @@ if (!isset($_SESSION['username'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Home</title>
+    <title>Setting</title>
 </head>
 <body>
 
 <?php include 'navbar.php'; ?>
 
-<h2>Home Page</h2>
+<h2>Settings</h2>
 
-<p>Hello, <?php echo $_SESSION['username']; ?>!</p>
+<p>Setting page here.</p>
 
 </body>
 </html>

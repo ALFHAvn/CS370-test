@@ -1,4 +1,11 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+session_start();
+
+// Connect DB
 $conn = new mysqli("localhost", "webuser", "123456", "userdb");
 
 if ($conn->connect_error) {
@@ -12,18 +19,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $stmt = $conn->prepare("SELECT password FROM users WHERE username = ?");
+    $stmt = $conn->prepare(
+        "SELECT password FROM users WHERE username = ?"
+    );
+
     $stmt->bind_param("s", $username);
+
     $stmt->execute();
 
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
+
         $row = $result->fetch_assoc();
 
-        // 🔐 VERIFY password
         if (password_verify($password, $row['password'])) {
-            $message = "Login successful!";
+
+            $_SESSION['username'] = $username;
+
+            header("Location: home.php");
+            exit();
+
         } else {
             $message = "Wrong password!";
         }
@@ -34,6 +50,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt->close();
 }
+
+$conn->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -46,13 +65,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <h2>Login</h2>
 
 <form method="POST">
-    Username: <input type="text" name="username"><br><br>
-    Password: <input type="password" name="password"><br><br>
+
+    Username:
+    <input type="text" name="username">
+    <br><br>
+
+    Password:
+    <input type="password" name="password">
+    <br><br>
 
     <input type="submit" value="Login">
+
 </form>
 
 <p><?php echo $message; ?></p>
+
+<br>
+
+<a href="index.php">Create account</a>
 
 </body>
 </html>
