@@ -4,7 +4,6 @@ require_once __DIR__ . '/../includes/bootstrap.php';
 
 sn_session_start();
 
-// If already signed in, go home.
 if (sn_current_username() !== null) {
     header('Location: /socialnet/index.php');
     exit();
@@ -32,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $hash = is_array($row) ? (string)($row['password'] ?? '') : '';
             if ($hash !== '' && password_verify($password, $hash)) {
-                // Prevent session fixation
                 session_regenerate_id(true);
                 $_SESSION['username'] = $username;
                 header('Location: /socialnet/index.php');
@@ -44,47 +42,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+sn_render_shell_start('Sign in', ['nav' => false]);
+
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SocialNet - Sign In</title>
-</head>
-<body>
+        <div class="sn-card sn-card--narrow">
+            <h1 class="sn-page-title" style="margin-bottom: 0.25rem;">Welcome back</h1>
+            <p class="sn-page-lead" style="margin-bottom: 1.25rem;">Sign in with an account created by the admin.</p>
 
-<h2>Sign In</h2>
+            <?php if ($message !== ''): ?>
+                <div class="sn-alert sn-alert--error"><?php echo sn_e($message); ?></div>
+            <?php endif; ?>
 
-<?php if ($message !== ''): ?>
-    <p style="color: crimson;"><?php echo sn_e($message); ?></p>
-<?php endif; ?>
+            <form method="post" action="/socialnet/signin.php">
+                <input type="hidden" name="csrf_token" value="<?php echo sn_e(sn_csrf_token()); ?>">
 
-<form method="post" action="/socialnet/signin.php">
-    <input type="hidden" name="csrf_token" value="<?php echo sn_e(sn_csrf_token()); ?>">
+                <div class="sn-field">
+                    <label for="username">Username</label>
+                    <input class="sn-input" id="username" type="text" name="username" required autocomplete="username">
+                </div>
 
-    <div>
-        <label>
-            Username
-            <input type="text" name="username" required>
-        </label>
-    </div>
-    <br>
+                <div class="sn-field">
+                    <label for="password">Password</label>
+                    <input class="sn-input" id="password" type="password" name="password" required autocomplete="current-password">
+                </div>
 
-    <div>
-        <label>
-            Password
-            <input type="password" name="password" required>
-        </label>
-    </div>
-    <br>
+                <div class="sn-actions">
+                    <button class="sn-btn sn-btn--primary" type="submit">Sign in</button>
+                </div>
+            </form>
+        </div>
 
-    <button type="submit">Sign In</button>
-</form>
-
-<hr>
-<p>Accounts are created from the admin page: <a href="/admin/newuser.php">/admin/newuser.php</a></p>
-
-</body>
-</html>
-
+        <p class="sn-page-lead" style="text-align: center; max-width: 420px; margin: 1.25rem auto 0;">
+            Need an account? An admin can create one at
+            <a class="sn-link" href="/admin/newuser.php">/admin/newuser.php</a>
+        </p>
+<?php
+sn_render_shell_end();

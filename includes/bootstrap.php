@@ -118,12 +118,67 @@ function sn_get_account_by_username(string $username): ?array
 
 function sn_render_menubar(): void
 {
-    echo '<hr>';
-    echo '<a href="/socialnet/index.php">Home</a> | ';
-    echo '<a href="/socialnet/setting.php">Setting</a> | ';
-    echo '<a href="/socialnet/profile.php">Profile</a> | ';
-    echo '<a href="/socialnet/about.php">About</a> | ';
-    echo '<a href="/socialnet/signout.php">SignOut</a>';
-    echo '<hr>';
+    echo '<nav class="sn-nav" aria-label="Main navigation">';
+    echo '<a href="/socialnet/index.php">Home</a>';
+    echo '<a href="/socialnet/setting.php">Setting</a>';
+    echo '<a href="/socialnet/profile.php">Profile</a>';
+    echo '<a href="/socialnet/about.php">About</a>';
+    echo '<a href="/socialnet/signout.php" class="sn-nav-out">Sign out</a>';
+    echo '</nav>';
+}
+
+/**
+ * @param array{nav?: bool, brand_href?: string, brand_label?: string} $options
+ */
+function sn_render_shell_start(string $title, array $options = []): void
+{
+    $showNav = !empty($options['nav']);
+    $brandHref = isset($options['brand_href'])
+        ? (string) $options['brand_href']
+        : ($showNav ? '/socialnet/index.php' : '/socialnet/signin.php');
+    $brandLabel = isset($options['brand_label']) ? (string) $options['brand_label'] : 'SocialNet';
+
+    echo '<!DOCTYPE html>' . "\n";
+    echo '<html lang="en">' . "\n";
+    echo '<head>' . "\n";
+    echo '    <meta charset="utf-8">' . "\n";
+    echo '    <meta name="viewport" content="width=device-width, initial-scale=1">' . "\n";
+    echo '    <title>' . sn_e($title) . '</title>' . "\n";
+    echo '    <link rel="stylesheet" href="/assets/app.css">' . "\n";
+    echo '</head>' . "\n";
+    echo '<body class="sn-body">' . "\n";
+    echo '<div class="sn-app">' . "\n";
+    echo '    <header class="sn-header">' . "\n";
+    echo '        <div class="sn-header-inner">' . "\n";
+    echo '            <a class="sn-brand" href="' . sn_e($brandHref) . '">' . sn_e($brandLabel) . '</a>' . "\n";
+    if ($showNav) {
+        echo '            ';
+        sn_render_menubar();
+        echo "\n";
+    }
+    echo '        </div>' . "\n";
+    echo '    </header>' . "\n";
+    echo '    <main class="sn-main">' . "\n";
+}
+
+function sn_render_shell_end(): void
+{
+    echo '    </main>' . "\n";
+    echo '    <footer class="sn-footer">' . "\n";
+    echo '        <p>SocialNet · mock project</p>' . "\n";
+    echo '    </footer>' . "\n";
+    echo '</div>' . "\n";
+    echo '</body>' . "\n";
+    echo '</html>' . "\n";
+}
+
+function sn_avatar_letter(string $username): string
+{
+    $trim = trim($username);
+    if ($trim === '') {
+        return '?';
+    }
+    $first = mb_substr($trim, 0, 1, 'UTF-8');
+    return mb_strtoupper($first, 'UTF-8');
 }
 

@@ -43,39 +43,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $me = sn_get_account_by_username($username);
 $currentDescription = is_array($me) ? (string)($me['description'] ?? '') : '';
 
+sn_render_shell_start('Settings', ['nav' => true]);
+
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SocialNet - Setting</title>
-</head>
-<body>
+        <h1 class="sn-page-title">Settings</h1>
+        <p class="sn-page-lead">This text is stored in the <code>description</code> column and shown on your profile.</p>
 
-<?php sn_render_menubar(); ?>
+        <div class="sn-card">
+            <?php if ($message !== ''): ?>
+                <div class="sn-alert <?php echo $isError ? 'sn-alert--error' : 'sn-alert--success'; ?>">
+                    <?php echo sn_e($message); ?>
+                </div>
+            <?php endif; ?>
 
-<h2>Setting</h2>
+            <form method="post" action="/socialnet/setting.php">
+                <input type="hidden" name="csrf_token" value="<?php echo sn_e(sn_csrf_token()); ?>">
 
-<p>Edit your Profile Page content (stored in the <code>description</code> field).</p>
+                <div class="sn-field">
+                    <label for="description">Profile description</label>
+                    <textarea class="sn-textarea" id="description" name="description" rows="10"><?php echo sn_e($currentDescription); ?></textarea>
+                </div>
 
-<?php if ($message !== ''): ?>
-    <p style="color: <?php echo $isError ? 'crimson' : 'green'; ?>;">
-        <?php echo sn_e($message); ?>
-    </p>
-<?php endif; ?>
-
-<form method="post" action="/socialnet/setting.php">
-    <input type="hidden" name="csrf_token" value="<?php echo sn_e(sn_csrf_token()); ?>">
-
-    <div>
-        <textarea name="description" rows="10" cols="80"><?php echo sn_e($currentDescription); ?></textarea>
-    </div>
-    <br>
-
-    <button type="submit">Save</button>
-</form>
-
-</body>
-</html>
-
+                <div class="sn-actions">
+                    <button class="sn-btn sn-btn--primary" type="submit">Save changes</button>
+                </div>
+            </form>
+        </div>
+<?php
+sn_render_shell_end();

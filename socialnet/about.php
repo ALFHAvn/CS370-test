@@ -4,23 +4,23 @@ require_once __DIR__ . '/../includes/bootstrap.php';
 
 sn_require_login();
 
+sn_render_shell_start('About', ['nav' => true]);
+
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SocialNet - About</title>
-</head>
-<body>
+        <h1 class="sn-page-title">About</h1>
+        <p class="sn-page-lead">Course submission details.</p>
 
-<?php sn_render_menubar(); ?>
-
-<h2>About</h2>
-
-<p><strong>Student name:</strong> Nguyen Dinh Toan Thang</p>
-<p><strong>Student number:</strong> 1694559</p>
-
-</body>
-</html>
-
+        <div class="sn-card">
+            <dl class="sn-dl">
+                <div>
+                    <dt>Student name</dt>
+                    <dd><?php echo sn_e('Nguyen Dinh Toan Thang'); ?></dd>
+                </div>
+                <div>
+                    <dt>Student number</dt>
+                    <dd><?php echo sn_e('1694559'); ?></dd>
+                </div>
+            </dl>
+        </div>
+<?php
+sn_render_shell_end();
