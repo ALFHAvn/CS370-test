@@ -325,7 +325,7 @@ Student details are in **`socialnet/about.php`**:
 |--------|----------------|
 | **404** on `/admin/...` | Nginx `root` must be `/var/www/socialnet` (project root with `admin/` inside). Remove `default` from `sites-enabled` if it still wins. Run `sudo nginx -t`. |
 | **502 Bad Gateway** | Wrong `fastcgi_pass` socket — run `ls /run/php/` and match PHP version; `sudo systemctl status php8.3-fpm`. |
-| **500** on admin “Create user” | Install **`php-mbstring`** for your PHP version and restart PHP-FPM. Check `sudo tail -n 40 /var/log/nginx/error.log`. |
+| **500** on admin “Create user” | Install **`php-mbstring`** for your PHP version and restart PHP-FPM. Check `sudo tail -n 40 /var/log/nginx/error.log`. Also If you created a already existed user, this error also occurs |
 | **Database connection failed** / blank error | Create `webuser` and `GRANT` on `socialnet`. Test with `mysql -u webuser -p`. |
 | **403** on some paths | `sudo chown -R www-data:www-data /var/www/socialnet` |
 
