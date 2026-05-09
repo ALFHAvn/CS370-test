@@ -35,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = 'User created successfully. You can now sign in.';
                 $isError = false;
             } else {
-                // Common: duplicate username
                 $message = 'Failed to create user (username may already exist).';
                 $isError = true;
             }
@@ -44,66 +43,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+sn_render_shell_start('Admin — New user', [
+    'nav' => false,
+    'brand_href' => '/admin/newuser.php',
+    'brand_label' => 'SocialNet Admin',
+]);
+
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin - New User</title>
-</head>
-<body>
+        <h1 class="sn-page-title">Create account</h1>
+        <p class="sn-page-lead">Add a user to the database. They can sign in from the main app.</p>
 
-<h2>Admin: Create New User</h2>
+        <div class="sn-card">
+            <?php if ($message !== ''): ?>
+                <div class="sn-alert <?php echo $isError ? 'sn-alert--error' : 'sn-alert--success'; ?>">
+                    <?php echo sn_e($message); ?>
+                </div>
+            <?php endif; ?>
 
-<?php if ($message !== ''): ?>
-    <p style="color: <?php echo $isError ? 'crimson' : 'green'; ?>;">
-        <?php echo sn_e($message); ?>
-    </p>
-<?php endif; ?>
+            <form method="post" action="/admin/newuser.php" autocomplete="off">
+                <input type="hidden" name="csrf_token" value="<?php echo sn_e(sn_csrf_token()); ?>">
 
-<form method="post" action="/admin/newuser.php" autocomplete="off">
-    <input type="hidden" name="csrf_token" value="<?php echo sn_e(sn_csrf_token()); ?>">
+                <div class="sn-field">
+                    <label for="username">Username</label>
+                    <input class="sn-input" id="username" type="text" name="username" maxlength="50" required>
+                </div>
 
-    <div>
-        <label>
-            Username
-            <input type="text" name="username" maxlength="50" required>
-        </label>
-    </div>
-    <br>
+                <div class="sn-field">
+                    <label for="fullname">Full name</label>
+                    <input class="sn-input" id="fullname" type="text" name="fullname" maxlength="120" required>
+                </div>
 
-    <div>
-        <label>
-            Full name
-            <input type="text" name="fullname" maxlength="120" required>
-        </label>
-    </div>
-    <br>
+                <div class="sn-field">
+                    <label for="password">Password</label>
+                    <input class="sn-input" id="password" type="password" name="password" required>
+                </div>
 
-    <div>
-        <label>
-            Password
-            <input type="password" name="password" required>
-        </label>
-    </div>
-    <br>
+                <div class="sn-field">
+                    <label for="description">Description <span class="sn-muted">(optional)</span></label>
+                    <textarea class="sn-textarea" id="description" name="description" rows="4"></textarea>
+                </div>
 
-    <div>
-        <label>
-            Description (optional)
-            <br>
-            <textarea name="description" rows="5" cols="60"></textarea>
-        </label>
-    </div>
-    <br>
-
-    <button type="submit">Create user</button>
-</form>
-
-<hr>
-<a href="/socialnet/signin.php">Go to Sign In</a>
-
-</body>
-</html>
-
+                <div class="sn-actions">
+                    <button class="sn-btn sn-btn--primary" type="submit">Create user</button>
+                    <a class="sn-link" href="/socialnet/signin.php">Go to sign in →</a>
+                </div>
+            </form>
+        </div>
+<?php
+sn_render_shell_end();

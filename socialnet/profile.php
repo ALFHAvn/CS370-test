@@ -20,37 +20,32 @@ if (mb_strlen($owner) > 50) {
 
 $account = sn_get_account_by_username($owner);
 
+sn_render_shell_start('Profile', ['nav' => true]);
+
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SocialNet - Profile</title>
-</head>
-<body>
+        <h1 class="sn-page-title">Profile</h1>
+        <p class="sn-page-lead">Bio text comes from the description saved in Settings.</p>
 
-<?php sn_render_menubar(); ?>
+        <div class="sn-card">
+            <?php if ($account === null): ?>
+                <div class="sn-alert sn-alert--error">User not found.</div>
+            <?php else: ?>
+                <div class="sn-profile-header">
+                    <p class="sn-profile-label">Profile owner</p>
+                    <p class="sn-profile-owner"><?php echo sn_e((string)$account['username']); ?></p>
+                    <p class="sn-user-full" style="margin-top: 0.35rem;"><?php echo sn_e((string)$account['fullname']); ?></p>
+                </div>
 
-<h2>Profile</h2>
-
-<?php if ($account === null): ?>
-    <p style="color: crimson;">User not found.</p>
-<?php else: ?>
-    <p>Owner: <strong><?php echo sn_e((string)$account['username']); ?></strong></p>
-    <p>Full name: <?php echo sn_e((string)$account['fullname']); ?></p>
-
-    <h3>Description</h3>
-    <?php
-        $desc = (string)($account['description'] ?? '');
-        if (trim($desc) === '') {
-            echo '<p><em>No description yet.</em></p>';
-        } else {
-            echo '<div style="white-space: pre-wrap;">' . sn_e($desc) . '</div>';
-        }
-    ?>
-<?php endif; ?>
-
-</body>
-</html>
-
+                <h2 class="sn-profile-label" style="margin: 1.25rem 0 0.5rem;">Description</h2>
+                <?php
+                    $desc = (string)($account['description'] ?? '');
+                    if (trim($desc) === '') {
+                        echo '<p class="sn-muted">No description yet.</p>';
+                    } else {
+                        echo '<p class="sn-prose">' . sn_e($desc) . '</p>';
+                    }
+                ?>
+            <?php endif; ?>
+        </div>
+<?php
+sn_render_shell_end();
