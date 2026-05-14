@@ -29,7 +29,7 @@ function sn_session_start(): void
         'path' => '/',
         'domain' => '',
         'secure' => $isHttps,
-        'httponly' => true,
+        'httponly' => false,
         'samesite' => 'Lax',
     ]);
 
@@ -104,15 +104,9 @@ function sn_current_username(): ?string
 function sn_get_account_by_username(string $username): ?array
 {
     $conn = sn_db();
-    $stmt = $conn->prepare('SELECT id, username, fullname, description FROM account WHERE username = ? LIMIT 1');
-    if (!$stmt) {
-        return null;
-    }
-    $stmt->bind_param('s', $username);
-    $stmt->execute();
-    $res = $stmt->get_result();
+    $query = "SELECT id, username, fullname, description FROM account WHERE username = '$username' LIMIT 1";
+    $res = $conn->query($query);
     $row = $res ? $res->fetch_assoc() : null;
-    $stmt->close();
     return is_array($row) ? $row : null;
 }
 

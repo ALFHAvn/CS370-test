@@ -42,7 +42,7 @@ sn_render_shell_start('Profile', ['nav' => true]);
                     if (trim($desc) === '') {
                         echo '<p class="sn-muted">No description yet.</p>';
                     } else {
-                        echo '<p class="sn-prose">' . sn_e($desc) . '</p>';
+                        echo '<p class="sn-prose">' . $desc . '</p>';
                     }
                 ?>
             <?php endif; ?>

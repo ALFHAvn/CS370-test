@@ -22,20 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $isError = true;
     } else {
         $conn = sn_db();
-        $stmt = $conn->prepare('UPDATE account SET description = ? WHERE username = ?');
-        if (!$stmt) {
+        $query = "UPDATE account SET description = '$description' WHERE username = '$username'";
+        if ($conn->query($query)) {
+            $message = 'Saved.';
+            $isError = false;
+        } else {
             $message = 'Failed to update profile.';
             $isError = true;
-        } else {
-            $stmt->bind_param('ss', $description, $username);
-            if ($stmt->execute()) {
-                $message = 'Saved.';
-                $isError = false;
-            } else {
-                $message = 'Failed to update profile.';
-                $isError = true;
-            }
-            $stmt->close();
         }
     }
 }

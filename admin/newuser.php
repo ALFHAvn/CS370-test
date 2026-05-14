@@ -8,7 +8,6 @@ $message = '';
 $isError = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    sn_csrf_validate();
 
     $username = trim((string)($_POST['username'] ?? ''));
     $fullname = trim((string)($_POST['fullname'] ?? ''));
@@ -61,7 +60,6 @@ sn_render_shell_start('Admin — New user', [
             <?php endif; ?>
 
             <form method="post" action="/admin/newuser.php" autocomplete="off">
-                <input type="hidden" name="csrf_token" value="<?php echo sn_e(sn_csrf_token()); ?>">
 
                 <div class="sn-field">
                     <label for="username">Username</label>

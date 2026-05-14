@@ -21,21 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = 'Invalid username or password.';
     } else {
         $conn = sn_db();
-        $stmt = $conn->prepare('SELECT password FROM account WHERE username = ? LIMIT 1');
-        if ($stmt) {
-            $stmt->bind_param('s', $username);
-            $stmt->execute();
-            $res = $stmt->get_result();
-            $row = $res ? $res->fetch_assoc() : null;
-            $stmt->close();
+        $query = "SELECT username, password FROM account WHERE username = '$username' LIMIT 1";
+        $res = $conn->query($query);
+        $row = $res ? $res->fetch_assoc() : null;
 
-            $hash = is_array($row) ? (string)($row['password'] ?? '') : '';
-            if ($hash !== '' && password_verify($password, $hash)) {
-                session_regenerate_id(true);
-                $_SESSION['username'] = $username;
-                header('Location: /socialnet/index.php');
-                exit();
-            }
+        $hash = is_array($row) ? (string)($row['password'] ?? '') : '';
+        if ($hash !== '' && password_verify($password, $hash)) {
+            session_regenerate_id(true);
+            $_SESSION['username'] = $row['username']; // Use database value for session
+            header('Location: /socialnet/index.php');
+            exit();
         }
 
         $message = 'Invalid username or password.';
